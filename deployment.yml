@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-s3-app
+  labels:
+    app: flask-s3-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-s3-app
+  template:
+    metadata:
+      labels:
+        app: flask-s3-app
+    spec:
+      containers:
+        - name: flask-s3-app
+          image: shashank1432/python_flask:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
